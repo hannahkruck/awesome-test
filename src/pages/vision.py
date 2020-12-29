@@ -8,7 +8,6 @@ import altair as alt
 from altair import Chart, X, Y, Axis, SortField, OpacityValue
 import numpy as np
 
-@st.cache
 def write():
     """Used to write the page in the app.py file"""
     with st.spinner("Loading Home ..."):
