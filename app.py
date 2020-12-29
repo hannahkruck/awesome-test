@@ -2,18 +2,16 @@
 import streamlit as st
 
 import awesome_streamlit as ast
-import src.pages.about
-import src.pages.gallery.index
+import src.pages.welcome
+import src.pages.gallery.detail
 import src.pages.home
-import src.pages.resources
-import src.pages.vision
 
 ast.core.services.other.set_logging_format()
 
 PAGES = {
     "welcome": src.pages.welcome,
     "home": src.pages.home,
-    "detail": src.pages.gallery.detail,
+    "detail": src.pages.gallery.detail
 }
 
 
