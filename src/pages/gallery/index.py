@@ -1,11 +1,3 @@
-"""The Gallery index page is used to navigate between examples
-
-Very much inspired by:
-Author: [Nhan Nguyen](https://github.com/virusvn)
-Source: https://github.com/virusvn/streamlit-components-demo/blob/master/app.py
-
-Credits to Nhan for sharing that code
-"""
 import logging
 from typing import List
 
@@ -16,125 +8,210 @@ import awesome_streamlit as ast
 # Get an instance of a logger
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 
-JSON_URL = """https://raw.githubusercontent.com/virusvn/streamlit-components-demo/
-master/streamlit_apps.json"""
+
 
 
 def write():
-    """This method writes the Gallery index page which is used to navigate between gallery apps"""
-    ast.shared.components.title_awesome("Gallery")
-    apps = get_apps()
+    """Writes content to the app"""
+    #ast.shared.components.title_awesome("Detail")      # Titel Awesome_Streamlit
+    
+    # Page title
+    st.title("Detailed view")
+#   st.header('Hier kann ein Text rein')
+    
+    # read CSV
+    # CSV for Pie Chart
+    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/VIS_Test1/Develop/piechart.csv',sep = ';')
+    
 
-    st.sidebar.title("Gallery")
-    is_awesome = st.sidebar.checkbox("Awesome apps only", True)
-    show_source_code = st.sidebar.checkbox("Show Source Code", True)
-    if is_awesome:
-        apps = ast.core.services.resources.filter_by_is_awesome(apps)
+    #-----------------Markdown info-----------------
+    
+    st.markdown('''
+    <!-- https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_transition & https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_right-->
+    <style>
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            font-size:1.6rem;
+            
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 50vw;
+            background-color: #f1f3f7;
+            color: #262730;
+            text-align: justify;
+            border-radius: 6px;
+            padding: 5px;
+            font-size:0.9rem;
+            
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+            top: -5px;
+            left: 105%;
+            
+            opacity: 0;
+            transition: opacity 0.8s;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    ''', unsafe_allow_html=True)
 
-    tags = st.multiselect("Select Tag(s)", get_tags(apps))
-    apps = ast.core.services.resources.filter_by_tags(apps, tags)
+    st.markdown('''
+        <div class="tooltip">&#x24D8
+        <span class="tooltiptext">
+        <b>Pie Chart</b><br>
+        The pie chart represents the age distribution worldwide for the selected year.
+        <br><br>
+        <b>Sankey Diagram</b><br>
+        The Sankey diagram shows the distribution of asylum applications from the different countries of origin (left) to the different countries of destination (right).
+        Top 10 destination countries of a year are illustrated here.
+        <br><br>
+        It should be noted that due to the overview, unknown data as well as data on overseas countries and territories have been removed from the dataset.  In addition, for a few countries only temporary data has been provided.
+        </span></div>
+        ''', unsafe_allow_html=True)  
 
-    authors = get_authors(apps)
-    author_all = ast.shared.models.Author(name="All", url="")
-    authors = [author_all] + authors
-    author = st.selectbox("Select Author", authors)
 
-    if author != author_all:
-        apps = get_apps_by_author(apps, author)
+    # Layout setting of the page 
+    c1, c2 = st.beta_columns((1, 1))
+    container = st.beta_container()
+    st.write('<style>div.Widget.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 
-    app_index = 0
-    if author == ast.database.apps_in_gallery.DEFAULT_APP_IN_GALLERY.author:
-        if ast.database.apps_in_gallery.DEFAULT_APP_IN_GALLERY in apps:
-            app_index = apps.index(ast.database.apps_in_gallery.DEFAULT_APP_IN_GALLERY)
+    
+#-------------------------Create Sankey diagram-------------------------------
+#https://www.geeksforgeeks.org/sankey-diagram-using-plotly-in-python/
+#https://coderzcolumn.com/tutorials/data-science/how-to-plot-sankey-diagram-in-python-jupyter-notebook-holoviews-and-plotly#2
+    
+    # Variabel fuer Sankey diagramm
+    yearVar = 2019                       
+    
+    #daten einlesen & selectieren
+    show_df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/VIS_Test1/Develop/Datensatz_Sankey_Diagramm_eng.csv',sep = ';')
 
-    apps = ast.core.services.resources.sort_resources(apps)
-    run_app = st.selectbox("Select the App", apps, index=app_index)
-    app_credits = st.empty()
+    #YEAR
+    yearRows = show_df[show_df['Year'] != yearVar].index
+    show_df.drop(yearRows , inplace=True)
 
-    app_credits.markdown(
-        f"""Resources: [Author]({run_app.author.url}), [App Code]({run_app.url})"""
+
+    # Nodes & links & colors
+    label_souce = show_df['Label_Source'].dropna(axis=0, how='any')
+    label_souce2 = []
+    elementVar = ''
+
+    for i in label_souce: 
+        if(i != elementVar) : 
+            label_souce2.append(i)
+        elementVar = i
+
+    label_target = show_df['Label_Target'].dropna(axis=0, how='any')
+    label = [*label_souce2, *label_target]
+    source = show_df['Source'].dropna(axis=0, how='any')
+    target = show_df['Target'].dropna(axis=0, how='any')
+    value = show_df['Value'].dropna(axis=0, how='any')
+
+        #color
+    color_node = [
+    #Source Syria, Afghanistan, Venezuela, Irak, Colombia, Pakistan, Türkei, Nigeria, Iran, Albania
+    '#40bf77', '#93beec', '#1ff91f', '#cd8162', '#a6a6a6', '#80e5ff', '#b299e6', '#ff33ff', '#CDC037', '#ff6a6a',
+    #Target 
+    '#0B2641', '#0B2641', '#0B2641', '#0B2641', '#0B2641', '#0B2641', '#0B2641', '#0B2641', '#0B2641', '#0B2641']
+    
+    color_link = [
+    '#b8e0b8', '#b8e0b8', '#b8e0b8', '#b8e0b8', '#b8e0b8', '#b8e0b8', '#b8e0b8', '#b8e0b8', '#b8e0b8', '#b8e0b8', 
+    '#bed8f4', '#bed8f4', '#bed8f4', '#bed8f4', '#bed8f4', '#bed8f4', '#bed8f4', '#bed8f4', '#bed8f4', '#bed8f4', 
+    '#bef4be', '#bef4be', '#bef4be', '#bef4be', '#bef4be', '#bef4be', '#bef4be', '#bef4be', '#bef4be', '#bef4be',
+    '#e7c1b1', '#e7c1b1', '#e7c1b1', '#e7c1b1', '#e7c1b1', '#e7c1b1', '#e7c1b1', '#e7c1b1', '#e7c1b1', '#e7c1b1',
+    '#cccccc', '#cccccc', '#cccccc', '#cccccc', '#cccccc', '#cccccc', '#cccccc', '#cccccc', '#cccccc', '#cccccc', 
+    '#80e5ff', '#80e5ff', '#80e5ff', '#80e5ff', '#80e5ff', '#80e5ff', '#80e5ff', '#80e5ff', '#80e5ff', '#80e5ff',  
+    '#c2adeb', '#c2adeb', '#c2adeb', '#c2adeb', '#c2adeb', '#c2adeb', '#c2adeb', '#c2adeb', '#c2adeb', '#c2adeb',
+    '#ffccff', '#ffccff', '#ffccff', '#ffccff', '#ffccff', '#ffccff', '#ffccff', '#ffccff', '#ffccff', '#ffccff', 
+    '#ffec80', '#ffec80', '#ffec80', '#ffec80', '#ffec80', '#ffec80', '#ffec80', '#ffec80', '#ffec80', '#ffec80', 
+    '#ffcccc', '#ffcccc', '#ffcccc', '#ffcccc', '#ffcccc', '#ffcccc', '#ffcccc', '#ffcccc', '#ffcccc', '#ffcccc',]  
+
+    # data to dict, dict to sankey
+    link = dict(source = source, target = target, value = value, color=color_link)
+    node = dict(label = label, pad= 20, thickness=10, color=color_node)
+
+    layout = dict(
+            #"Top 10 Verteilung der Asylanträge eines Landes auf die verschiedenen Zielländer"
+            #title= 'Top 10 Distribution of a Countries Asylum Applications among the various <br>Countries of Destination  %s' % yearVar,
+            height = 800,                   
+            font = dict(size = 11),)
+    data = go.Sankey(link = link, node=node)
+    
+    # Eigenschaften Sanky Diagram Layout 
+    fig2 = go.Figure(data, layout= layout)
+
+#------------Create pie chart-------------------
+    # Transfer data to list
+    
+    labels = df['year'].tolist()
+    values = df['2019'].tolist()
+    layout = dict( 
+        height = 600,       
+        font = dict(size = 11)            
+        #title='Age Distribution of Asylum Seekers Worldwide %s'
+        )
+    data = go.Pie(labels=labels, values=values)
+
+    # Create pie figure
+    fig1 = go.Figure(data=[go.Pie(
+        labels=labels, 
+        values=values, 
+        textinfo='label+percent', 
+        insidetextorientation='radial',)])
+    
+    # Features Pie Diagram Layout
+    fig1 = go.Figure(data, layout=layout)
+
+#------------Create Timeline Years V. 2.0-------------------
+    # read CSV for the histogram graph
+    df = pd.read_csv("https://raw.githubusercontent.com/hannahkruck/VIS_Test1/Develop/Histogram_mini.csv",encoding ="utf8", sep = ";")
+    # use years for the x-axis and the worldwide amount of asylum applications for the y-axis
+    fig3 = go.Figure(go.Scatter(x = df['year'], y = df['asylum_applications_worldwide']))
+    # customizing the graph
+    fig3.update_layout(
+    # customize width
+        #autosize=False,
+        width=1900,
+        height=100,
+    # hide labels
+        yaxis={'visible': False, 'showticklabels': False
+        },
+    # show every year as a label below
+        xaxis={'type': 'category'},
+    # create white background to match with initial background of streamlit
+        plot_bgcolor='rgb(255,255,255)',
+    # set all margins and padding to zero to create full width graph
+        margin=go.layout.Margin(
+        l=0,
+        r=35,
+        b=0,
+        t=0,
+        pad = 0
     )
+)
+#------------Create Slider Years V. 2.0-------------------
+    year = st.slider("", (int(df["year"].min())),(int(df["year"].max())))
+    selected_year = year
+    # Delete all cells, except one year (both maps)
+    indexNames = df[ df['year'] != selected_year ].index
+    df.drop(indexNames , inplace=True)
 
-    # Fetch the content
-    python_code = ast.core.services.other.get_file_content_as_string(run_app.url)
-
-    # Run the child app
-    if python_code is not None:
-        try:
-            with st.spinner(f"Loading {run_app.name} ..."):
-                exec(python_code, globals())  # pylint: disable=exec-used
-        except Exception as exception:  # pylint: disable=broad-except
-            st.write("Error occurred when executing [{0}]".format(run_app))
-            st.error(str(exception))
-            logging.error(exception)
-
-        if show_source_code:
-            st.header("Source code")
-            st.code(python_code)
-
-
-def get_apps() -> List[ast.shared.models.Resource]:
-    """The list of resources
-
-    Returns:
-        List[ast.shared.models.Resource] -- The list of resources
-    """
-    return [
-        resource
-        for resource in ast.database.RESOURCES
-        if ast.database.tags.APP_IN_GALLERY in resource.tags
-    ]
-
-
-def get_tags(
-    resources: List[ast.shared.models.Resource]
-) -> List[ast.shared.models.Tag]:
-    """The list of Tags
-
-    Returns:
-        List[ast.shared.models.Resource] -- The list of Tags
-    """
-    tags = set()
-    for resource in resources:
-        for tag in resource.tags:
-            tags.add(tag)
-    return sorted(list(tags), key=lambda x: x.name)
-
-
-@st.cache
-def get_authors(
-    resources: List[ast.shared.models.Resource]
-) -> List[ast.shared.models.Author]:
-    """The list of Authors of the specified resources
-
-    The list is sorted by Author.name
-
-    Arguments:
-        resources {List[ast.shared.models.Resource]} -- A list of Resources
-        tags {List[ast.shared.models.Resource]} -- A list of Tags
-
-    Returns:
-        List[ast.shared.models.Author] -- [description]
-    """
-    authors = list({resource.author for resource in resources if resource.author})
-    return sorted(authors, key=lambda x: x.name)
-
-
-@st.cache
-def get_apps_by_author(
-    resources: List[ast.shared.models.Resource], author: ast.shared.models.Author
-) -> List[ast.shared.models.Resource]:
-    """The Resources by the specified Author
-
-    Arguments:
-        resources {List[ast.shared.models.Resource]} -- A list of resources
-        author {ast.shared.models.Author} -- A list of authors
-
-    Returns:
-        List[ast.shared.models.Resource] -- [description]
-    """
-    resources = [resource for resource in resources if resource.author == author]
-    return sorted(resources, key=lambda x: x.name)
+    with c1:
+        st.subheader('Asylum seekers by age in Europe in the year %s' % selected_year) 
+        st.plotly_chart(fig1, use_container_width=True)
+    with c2:
+        st.subheader('Top 10 Distribution of a Countries Asylum Applications among the various Countries of Destination  %s' % selected_year)
+        st.plotly_chart(fig2, use_container_width=True)
+    with container:
+        st.plotly_chart(fig3, use_container_width=True)
 
 
 if __name__ == "__main__":
