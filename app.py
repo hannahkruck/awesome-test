@@ -6,6 +6,7 @@ import src.pages.welcome
 import src.pages.gallery.detail
 import src.pages.home
 
+st.set_page_config(layout="wide")
 ast.core.services.other.set_logging_format()
 
 PAGES = {
