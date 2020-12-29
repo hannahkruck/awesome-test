@@ -11,11 +11,9 @@ import src.pages.vision
 ast.core.services.other.set_logging_format()
 
 PAGES = {
-    "Home": src.pages.home,
-    "Resources": src.pages.resources,
-    "Gallery": src.pages.gallery.index,
-    "Vision": src.pages.vision,
-    "About": src.pages.about,
+    "welcome": src.pages.welcome,
+    "home": src.pages.home,
+    "detail": src.pages.gallery.detail,
 }
 
 
