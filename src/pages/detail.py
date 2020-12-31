@@ -1,3 +1,4 @@
+"""This page is for more details"""
 import logging
 from typing import List
 
@@ -253,4 +254,3 @@ def write():
       
 if __name__ == "__main__":
     write()
-    
