@@ -20,7 +20,7 @@ def write():
     
     # read CSV
     # CSV for Pie Chart
-    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/Develop/Piechart.csv',sep = ';')
+    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/Master/Piechart.csv',sep = ';')
     
 
     #-----------------Markdown info-----------------
