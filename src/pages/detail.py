@@ -20,7 +20,7 @@ def write():
     
     # read CSV
     # CSV for Pie Chart
-    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/Develop/Piechart.csv',sep = ';')
+    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/master/Piechart.csv',sep = ';')
     
 
     #-----------------Markdown info-----------------
@@ -73,9 +73,9 @@ def write():
 
     # read csv
     # old csv  pie structure 
-    # df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/Master/Piechart.csv',sep = ';')
+    # df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/master/Piechart.csv',sep = ';')
     # new csv  pie structure
-    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/Master/Piechart_neu_struk.csv',sep = ';')
+    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/master/Piechart_neu_struk.csv',sep = ';')
 
 
     #-----------------Slider-------------------
@@ -99,7 +99,7 @@ def write():
     yearVar = selected_year    
                          
     # read sankey csv and data selection
-    show_df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/Master/Sankey_Diagramm.csv',sep = ';')
+    show_df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/master/Sankey_Diagramm.csv',sep = ';')
 
     # year
     yearRows = show_df[show_df['Year'] != yearVar].index
@@ -157,7 +157,7 @@ def write():
     # https://jasonxqh.github.io/2020/07/12/plotly基础/
     
     # read csv for pie chart
-    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/Master/Piechart.csv',sep = ';')
+    df = pd.read_csv('https://raw.githubusercontent.com/hannahkruck/awesome-test/master/Piechart.csv',sep = ';')
 	
     # show specific value if a choosen year is selected on slider
     labels = df['year'].tolist()
@@ -215,7 +215,7 @@ def write():
 
 #------------Create Timeline Years V. 2.0-------------------
     # read CSV for the histogram graph
-    df = pd.read_csv("https://raw.githubusercontent.com/hannahkruck/awesome-test/Master/Histogramm.csv",encoding ="utf8", sep = ";")
+    df = pd.read_csv("https://raw.githubusercontent.com/hannahkruck/awesome-test/master/Histogramm.csv",encoding ="utf8", sep = ";")
     # use years for the x-axis and the worldwide amount of asylum applications for the y-axis
     fig3 = go.Figure(go.Scatter(x = df['year'], y = df['asylum_applications_worldwide']))
     # customizing the graph
