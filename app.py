@@ -12,7 +12,7 @@ ast.core.services.other.set_logging_format()
 PAGES = {
     "welcome": src.pages.welcome,
     "home": src.pages.home,
-    "detail": src.pages.gallery.detail
+    "detail": src.pages.detail
 }
 
 
