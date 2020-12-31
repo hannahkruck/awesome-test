@@ -3,7 +3,7 @@ import streamlit as st
 
 import awesome_streamlit as ast
 import src.pages.welcome
-import src.pages.gallery.detail
+import src.pages.detail
 import src.pages.home
 
 st.set_page_config(layout="wide")
