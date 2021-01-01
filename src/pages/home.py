@@ -7,6 +7,7 @@ import pandas as pd
 import altair as alt
 from altair import Chart, X, Y, Axis, SortField, OpacityValue
 import numpy as np
+
 # pylint: disable=line-too-long
 def write():
     """Used to write the page in the app.py file"""
@@ -248,7 +249,7 @@ def write():
                     elif i == 'over 65':
                         indexNames = df2[ df2['fo65'] == 0].index
                         df2.drop(indexNames , inplace=True)
-                        df2['subtotal']=df2['subtotal']+df2['fo18']
+                        df2['subtotal']=df2['subtotal']+df2['fo65']
             else:
                 indexNames = df2[ df2['womenTotal'] == 0].index
                 df2.drop(indexNames , inplace=True)
@@ -273,7 +274,7 @@ def write():
                     elif i == 'over 65':
                         indexNames = df2[ df2['mo65'] == 0].index
                         df2.drop(indexNames , inplace=True)
-                        df2['subtotal']=df2['subtotal']+df2['mo18']
+                        df2['subtotal']=df2['subtotal']+df2['mo65']
             else:
                 indexNames = df2[ df2['menTotal'] == 0].index
                 df2.drop(indexNames , inplace=True)
@@ -357,6 +358,7 @@ def write():
             colorscale = mapColor,
             autocolorscale=False,
             reversescale=False,
+            name="",
             marker_line_color='darkgray',
             marker_line_width=0.5,
             colorbar_tickprefix = '',
@@ -435,9 +437,17 @@ def write():
                 l=0,
                 r=0,
                 b=0,
-                t=0,
+                t=20,
             ),
         )
 
         # Display figure
-        st.plotly_chart(fig,use_container_width=True,config=dict(displayModeBar=False))
+        st.plotly_chart(fig,use_container_width=True, config={'modeBarButtonsToRemove': ['lasso2d','select2d', 'pan2d', 'hoverClosestGeo']})
+
+        # Hide the whole modebar
+        # config=dict(displayModeBar=False)
+
+        # CSS to hide plotly icon in modebar
+        #.modebar-btn--logo{
+        #    display:none;
+        #}

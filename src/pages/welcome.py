@@ -14,7 +14,6 @@ import base64
 
 
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
-
 def write():
 	
 	#ast.shared.components.title_awesome("Welcome")      # Titel Awesome_Streamlit ausblenden
@@ -300,7 +299,9 @@ def write():
 	my_expander_four = st.beta_expander("Source", expanded=False)
 	with my_expander_four:
 		html_four = """ 
-			<p>[1] 16.10.2020. Was tut die Bundesregierung im Bereich Migration und Integration?. URL: https://www.bundesregierung.de/breg-de/themen/migration-und-integration</p>"""
+			[1] Link to GitHub Project: <a target="_blank" href="https://github.com/hannahkruck/VIS_Test1.git"> VISUASYL</a><br> 			
+			<p>[2] <a target="_blank" href="https://www.bundesregierung.de/breg-de/themen/migration-und-integration">Was tut die Bundesregierung im Bereich Migration und Integration? (16.10.2020)</a><br></p>
+			"""
 		st.markdown(html_four, unsafe_allow_html=True)
 
 

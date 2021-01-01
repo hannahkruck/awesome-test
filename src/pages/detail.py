@@ -245,12 +245,12 @@ def write():
 
     with c1:
         st.subheader('Asylum seekers by age in Europe in the year %s' % selected_year) 
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(fig1, use_container_width=True,config={'modeBarButtonsToRemove': ['lasso2d','select2d', 'pan2d', 'hoverClosestPie']})
     with c2:
         st.subheader('Top 10 Distribution of a Countries Asylum Applications among the various Countries of Destination  %s' % selected_year)
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, use_container_width=True, config={'modeBarButtonsToRemove': ['lasso2d','select2d', 'pan2d', 'hoverClosestCartesian', 'hoverCompareCartesian']})
     with container:
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, use_container_width=True, config=dict(displayModeBar=False))
       
 if __name__ == "__main__":
     write()

@@ -5,14 +5,31 @@ import awesome_streamlit as ast
 import src.pages.welcome
 import src.pages.detail
 import src.pages.home
+import plotly.graph_objects as go
+import pandas as pd
+import altair as alt
+from altair import Chart, X, Y, Axis, SortField, OpacityValue
+import numpy as np
+
+ast.core.services.other.set_logging_format()
 
 st.set_page_config(layout="wide")
+
+# Markdown to hide MainMenu (which contains things like rerun or links to github)
+st.markdown('''
+        <style>
+            #MainMenu{
+            display:none;
+            }
+        </style>
+        ''', unsafe_allow_html=True)
+
 ast.core.services.other.set_logging_format()
 
 PAGES = {
-    "welcome": src.pages.welcome,
-    "home": src.pages.home,
-    "detail": src.pages.detail
+    "Welcome": src.pages.welcome,
+    "Map": src.pages.home,
+    "Detail": src.pages.detail,
 }
 
 
@@ -25,7 +42,6 @@ def main():
 
     with st.spinner(f"Loading {selection} ..."):
         ast.shared.components.write_page(page)
-
 
 if __name__ == "__main__":
     main()
